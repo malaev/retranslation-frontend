@@ -1,7 +1,9 @@
 import { notFound } from 'next/navigation';
 import { redditApi } from '@/lib/api';
 import { ScheduleForm } from '@/components/ScheduleForm';
-import { ChannelConfigForm } from '@/components/ChannelConfigForm';
+import { ChannelConfigForm } from '@/components/ChannelConfigForm'
+import { ModerationPanel } from '@/components/ModerationPanel';
+import { PublicationScheduleForm } from '@/components/PublicationScheduleForm';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 export default async function EditSchedulePage({ params }: { params: { id: string } }) {
@@ -20,6 +22,8 @@ export default async function EditSchedulePage({ params }: { params: { id: strin
         <TabsList>
           <TabsTrigger value="schedule">Настройки расписания</TabsTrigger>
           <TabsTrigger value="channel">Настройки Telegram канала</TabsTrigger>
+          <TabsTrigger value="moderation">Модерация</TabsTrigger>
+          <TabsTrigger value="publication">Расписание публикаций</TabsTrigger>
         </TabsList>
 
         <TabsContent value="schedule">
@@ -28,6 +32,14 @@ export default async function EditSchedulePage({ params }: { params: { id: strin
 
         <TabsContent value="channel">
           <ChannelConfigForm scheduleId={schedule.id!} />
+        </TabsContent>
+
+        <TabsContent value="moderation">
+          <ModerationPanel scheduleId={schedule.id!} />
+        </TabsContent>
+
+        <TabsContent value="publication">
+          <PublicationScheduleForm channelId={schedule.id!} />
         </TabsContent>
       </Tabs>
     </div>

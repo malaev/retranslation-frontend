@@ -1,6 +1,8 @@
 import axios from 'axios';
 import { FetcherScheduleConfig } from "@/types/reddit";
 import { TelegramChannelConfig } from "@/types/telegram";
+import { ModerationStatus, ProcessedPost, PostsQueryParams } from "@/types/moderation";
+import { PublicationSchedule } from "@/types/publication";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080';
 
@@ -59,5 +61,44 @@ export const channelApi = {
 
   async deleteChannelConfig(id: string): Promise<void> {
     await axiosInstance.delete(`/channel-configs/${id}`);
+  },
+};
+
+export const moderationApi = {
+  async getPosts(params: PostsQueryParams): Promise<ProcessedPost[]> {
+    const { data } = await axiosInstance.get('/moderation/posts', { params });
+    return data;
+  },
+
+  async approvePost(id: string): Promise<ProcessedPost> {
+    const { data } = await axiosInstance.post(`/moderation/posts/${id}/approve`);
+    return data;
+  },
+
+  async rejectPost(id: string): Promise<ProcessedPost> {
+    const { data } = await axiosInstance.post(`/moderation/posts/${id}/reject`);
+    return data;
+  },
+
+  async updatePostContent(id: string, content: ProcessedPost['content']): Promise<ProcessedPost> {
+    const { data } = await axiosInstance.put(`/moderation/posts/${id}/content`, { content });
+    return data;
+  },
+};
+
+export const publicationApi = {
+  async getSchedule(channelId: string): Promise<PublicationSchedule | null> {
+    const { data } = await axiosInstance.get(`/telegram-publisher/schedules/${channelId}`);
+    return data;
+  },
+
+  async createSchedule(schedule: Omit<PublicationSchedule, 'id' | 'createdAt' | 'updatedAt'>): Promise<PublicationSchedule> {
+    const { data } = await axiosInstance.post('/telegram-publisher/schedules', schedule);
+    return data;
+  },
+
+  async updateSchedule(id: string, updates: Partial<Omit<PublicationSchedule, 'id' | 'createdAt' | 'updatedAt'>>): Promise<PublicationSchedule> {
+    const { data } = await axiosInstance.put(`/telegram-publisher/schedules/${id}`, updates);
+    return data;
   },
 }; 

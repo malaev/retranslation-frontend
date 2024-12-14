@@ -3,6 +3,7 @@ export enum ProcessingStep {
   Summarization = 'summarization',
   Styling = 'styling',
   Media = 'media',
+  TelegramFormat = 'telegram-format',
 }
 
 export type ProcessingStepConfig = {
@@ -18,6 +19,9 @@ export type ProcessingStepConfig = {
   };
   [ProcessingStep.Media]?: {
     minCoherenceScore: number; // Минимальный порог согласованности текста и медиа
+  };
+  [ProcessingStep.TelegramFormat]?: {
+    prompt: string;
   };
 };
 

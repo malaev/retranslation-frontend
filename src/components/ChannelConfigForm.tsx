@@ -8,6 +8,7 @@ import { Card } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { TelegramChannelConfig, ProcessingStep, ProcessingStepConfig } from '@/types/telegram';
 import { channelApi } from '@/lib/api';
+import { Textarea } from '@/components/ui/textarea';
 
 interface ChannelConfigFormProps {
   scheduleId: string;
@@ -19,6 +20,7 @@ const AVAILABLE_STEPS: { value: ProcessingStep; label: string }[] = [
   { value: ProcessingStep.Summarization, label: 'Суммаризация' },
   { value: ProcessingStep.Styling, label: 'Стилизация' },
   { value: ProcessingStep.Media, label: 'Обработка медиа' },
+  { value: ProcessingStep.TelegramFormat, label: 'Форматирование для Telegram' },
 ];
 
 const STEP_CONFIGS: Record<ProcessingStep, React.ComponentType<{
@@ -85,6 +87,18 @@ const STEP_CONFIGS: Record<ProcessingStep, React.ComponentType<{
       </div>
     </div>
   ),
+  [ProcessingStep.TelegramFormat]: ({ config, onChange }) => (
+    <div className="space-y-2">
+      <div className="flex items-center space-x-2">
+        <label>Промт форматирования</label>
+        <Textarea
+          placeholder="Промт форматирования"
+          value={config?.prompt || ''}
+          onChange={(e) => onChange({ ...config, prompt: e.target.value || '' })}
+        />
+      </div>
+    </div>
+  ),
 };
 
 export function ChannelConfigForm({ scheduleId, onConfigSaved }: ChannelConfigFormProps) {
@@ -136,7 +150,7 @@ export function ChannelConfigForm({ scheduleId, onConfigSaved }: ChannelConfigFo
           ...prev!.pipeline.steps,
           {
             type,
-            config: {},
+            config: type === ProcessingStep.Translation ? { targetLang: 'ru' } : {},
             order: prev!.pipeline.steps.length,
           },
         ],
