@@ -41,6 +41,18 @@ const STEP_CONFIGS: Record<ProcessingStep, React.ComponentType<{
       </SelectContent>
     </Select>
   ),
+  [ProcessingStep.Styling]: ({ config, onChange }) => (
+    <div className="space-y-2">
+      <div className="flex items-center space-x-2">
+        <label>Промт стилизации</label>
+        <Input
+          placeholder="Промт стилизации"
+        value={config?.prompt || ''}
+          onChange={(e) => onChange({ ...config, prompt: e.target.value || '' })}
+        />
+      </div>
+    </div>
+  ),
   [ProcessingStep.Summarization]: ({ config, onChange }: { config: ProcessingStepConfig[ProcessingStep.Summarization], onChange: (config: ProcessingStepConfig[ProcessingStep.Summarization]) => void }) => (
     <div className="space-y-2">
       <div className="flex items-center space-x-2">
@@ -62,13 +74,13 @@ const STEP_CONFIGS: Record<ProcessingStep, React.ComponentType<{
       </div>
     </div>
   ),
-  [ProcessingStep.Styling]: ({ config, onChange }) => (
+  [ProcessingStep.TelegramFormat]: ({ config, onChange }) => (
     <div className="space-y-2">
       <div className="flex items-center space-x-2">
-        <label>Промт стилизации</label>
-        <Input
-          placeholder="Промт стилизации"
-        value={config?.prompt || ''}
+        <label>Промт форматирования</label>
+        <Textarea
+          placeholder="Промт форматирования"
+          value={config?.prompt || ''}
           onChange={(e) => onChange({ ...config, prompt: e.target.value || '' })}
         />
       </div>
@@ -83,18 +95,6 @@ const STEP_CONFIGS: Record<ProcessingStep, React.ComponentType<{
           placeholder="Минимальный порог согласованности текста и медиа"
           value={config?.minCoherenceScore || 0.5}
           onChange={(e) => onChange({ ...config, minCoherenceScore: parseFloat(e.target.value) || 0.8 })}
-        />
-      </div>
-    </div>
-  ),
-  [ProcessingStep.TelegramFormat]: ({ config, onChange }) => (
-    <div className="space-y-2">
-      <div className="flex items-center space-x-2">
-        <label>Промт форматирования</label>
-        <Textarea
-          placeholder="Промт форматирования"
-          value={config?.prompt || ''}
-          onChange={(e) => onChange({ ...config, prompt: e.target.value || '' })}
         />
       </div>
     </div>
